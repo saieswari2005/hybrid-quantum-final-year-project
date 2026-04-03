@@ -1,0 +1,98 @@
+QUANTUM ML BENCHMARKING PROJECT - QUICK START GUIDE
+====================================================
+
+STEP 1: INSTALL DEPENDENCIES
+-----------------------------
+pip install -r requirements.txt
+
+This will install:
+- PyTorch 2.1.0
+- PennyLane 0.33.1
+- scikit-learn 1.3.2
+- NumPy, Pandas, Matplotlib, Seaborn
+- Other required packages
+
+STEP 2: VERIFY INSTALLATION (OPTIONAL BUT RECOMMENDED)
+-------------------------------------------------------
+python test_installation.py
+
+This will check that:
+- All packages are installed correctly
+- All project files are present
+- Configuration is valid
+
+STEP 3: RUN THE BENCHMARKING SYSTEM
+------------------------------------
+python main.py
+
+This will automatically:
+1. Download datasets (MNIST, Fashion-MNIST, IMDB)
+2. Create small-data regimes [50, 100, 500, 1000 samples]
+3. Train classical models (CNN, LSTM)
+4. Train hybrid quantum-classical models
+5. Train quantum kernel SVM
+6. Evaluate all models
+7. Generate metrics and save to results/metrics/
+8. Generate plots and save to results/plots/
+9. Save detailed logs to results/logs/
+
+EXPECTED RUNTIME
+----------------
+- Small datasets (50-100): ~5-10 minutes per model
+- Large datasets (500-1000): ~15-30 minutes per model
+- Full benchmark: 2-6 hours (depending on your CPU)
+
+OUTPUTS
+-------
+After execution, you'll find:
+
+1. results/metrics/all_results.csv
+   Complete metrics table with:
+   - Accuracy (train/val/test)
+   - F1 scores
+   - Training time
+   - Memory usage
+   - Overfitting gaps
+
+2. results/plots/
+   - accuracy_vs_size.png
+   - f1_vs_size.png
+   - overfitting_gap_vs_size.png
+   - training_time_vs_size.png
+   - model_comparison.png
+
+3. results/logs/
+   - Detailed timestamped log files
+
+CUSTOMIZATION
+-------------
+Edit config.yaml to modify:
+- Learning rate
+- Batch size
+- Number of epochs
+- Circuit depth
+- Dataset sizes
+- Random seed
+
+TROUBLESHOOTING
+---------------
+If you encounter errors:
+1. Run test_installation.py to check setup
+2. Check logs in results/logs/
+3. Ensure you have sufficient disk space for datasets
+4. For quantum models, ensure PennyLane is installed correctly
+
+NOTES
+-----
+- QSVM only runs on smallest datasets (50, 100) due to O(n²) kernel computation
+- All models use identical hyperparameters for fair comparison
+- Results are fully reproducible with the same random seed
+
+SYSTEM REQUIREMENTS
+-------------------
+- Python 3.8+
+- 8GB+ RAM recommended
+- ~2GB disk space for datasets
+- CPU only (no GPU required)
+
+For more details, see README.md

@@ -1,0 +1,58 @@
+QSVM PERFORMANCE GUIDE (UPDATED)
+================================
+
+WHY QSVM IS SLOW
+----------------
+QSVM computes a quantum kernel matrix with pairwise comparisons.
+
+- Training kernel cost: O(n^2)
+- Test kernel cost: O(n_test * n_train)
+- Each element requires a quantum circuit simulation
+
+This becomes expensive quickly on classical simulators.
+
+KEY IMPROVEMENTS IMPLEMENTED
+----------------------------
+1. QNode reuse (avoids recreating a QNode for every kernel element)
+2. Symmetric kernel optimization for training matrix
+3. Train-fitted PCA -> `num_qubits` (replaces poor "first few pixels" feature selection)
+4. Train-fitted scaling to `[0, pi]` applied consistently to val/test
+5. Optional balanced test subset evaluation (`evaluation.qsvm_test_subset`)
+
+PRACTICAL CONFIGURATION TIPS
+----------------------------
+For quick tests:
+- Use `config_fast.yaml` (QSVM disabled)
+
+For QSVM smoke tests:
+- Use `config_qsvm_minimal.yaml`
+- Keep `qsvm_max_size: 50`
+- Use low complexity (`num_qubits: 2`, `circuit_depth: 1`)
+
+For ablations:
+- Edit:
+  - `ablation.quantum_kernel.num_qubits`
+  - `ablation.quantum_kernel.circuit_depth`
+
+EXAMPLE SETTINGS
+----------------
+Fast development:
+  models_to_run:
+    qsvm: false
+
+QSVM minimal:
+  qsvm_max_size: 50
+  evaluation:
+    qsvm_test_subset: 200
+  ablation:
+    quantum_kernel:
+      num_qubits: [2, 4]
+      circuit_depth: [1, 2]
+
+IMPORTANT SCIENTIFIC NOTE
+-------------------------
+Slow QSVM on a simulator is not necessarily a code bug.
+It is mostly a computational limitation of kernel methods + quantum simulation cost.
+
+Do not claim real quantum hardware will automatically fix this.
+Hardware noise and queue latency can make practical performance worse today.

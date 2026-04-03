@@ -1,0 +1,84 @@
+# Configuration for Quantum ML Benchmarking - QSVM MINIMAL MODE
+
+# Random seed for reproducibility
+random_seed: 42
+
+# Dataset configurations
+datasets:
+  - name: "MNIST"
+    type: "image"
+  - name: "FashionMNIST"
+    type: "image"
+  - name: "IMDB"
+    type: "text"
+
+# Small-data regime sizes
+dataset_sizes: [50, 100]
+
+# Enable/Disable models
+models_to_run:
+  cnn: true
+  mlp: true
+  lstm: true
+  hybrid_qc: true
+  qsvm: true
+
+# QSVM will only run on datasets with size <= this threshold
+qsvm_max_size: 50  # Only run QSVM on n=50
+
+# Training hyperparameters (IDENTICAL FOR ALL MODELS)
+training:
+  learning_rate: 0.001
+  batch_size: 32
+  epochs: 50
+  early_stopping_patience: 10
+
+# Model-specific configurations
+models:
+  classical:
+    cnn:
+      conv1_channels: 16
+      conv2_channels: 32
+      fc_hidden: 128
+      dropout: 0.5
+    mlp:
+      hidden1: 128
+      hidden2: 64
+      dropout: 0.3
+    
+    lstm:
+      embedding_dim: 128
+      hidden_dim: 128
+      num_layers: 2
+      dropout: 0.5
+  
+  hybrid_quantum:
+    num_qubits: 4
+    circuit_depth: 2
+    classical_hidden: 64
+  
+  quantum_kernel:
+    num_qubits: 2  # Reduced from 4 to 2 for speed
+    circuit_depth: 1  # Reduced from 2 to 1 for speed
+    kernel_type: "iqp"
+
+# Text processing
+text:
+  max_sequence_length: 200
+  vocab_size: 10000
+
+# Computational settings
+computation:
+  device: "cpu"
+  num_workers: 0
+
+evaluation:
+  qsvm_test_subset: 200
+
+ablation:
+  hybrid_quantum:
+    num_qubits: [4]
+    circuit_depth: [2]
+  quantum_kernel:
+    num_qubits: [2]
+    circuit_depth: [1]

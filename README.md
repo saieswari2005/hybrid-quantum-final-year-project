@@ -1,56 +1,95 @@
-# Hybrid Quantum–Classical Machine Learning Benchmarking
+# Quantum ML Benchmarking and Diagnostic System
 
-## 📌 Project Title
-Evaluating Hybrid Quantum–Classical Learning for Data-Limited Classification Tasks
+This project benchmarks classical and quantum-integrated models on small-data tasks and explains *why* the quantum models succeed or fail using runtime, memory, and ablation diagnostics.
 
-## 📖 Description
-This project presents a structured benchmarking framework to evaluate classical machine learning models and hybrid quantum–classical models in small-data scenarios. 
+## What This Project Is (and Is Not)
 
-The system compares performance, generalization ability, and computational trade-offs between classical deep learning models and quantum-enhanced approaches.
+- `Is`: a reproducible benchmarking + analysis framework for `CNN`, `MLP`, `LSTM`, `Hybrid-QC`, and `QSVM`
+- `Is`: suitable for a final-year project/paper on fair QML evaluation and bottleneck analysis
+- `Is not`: a claim of guaranteed quantum advantage over strong classical baselines
 
----
+## Current Focus / Contributions
 
-## 🎯 Objectives
-- Compare classical and quantum machine learning models
-- Analyze performance in data-limited environments
-- Study impact of qubit count and circuit depth
-- Evaluate accuracy, runtime, and overfitting trends
-- Provide a reproducible benchmarking framework
+- Fairer image benchmarking with a new `MLP` baseline (`models/classical/mlp.py`)
+- Hybrid QML training fix (gradient-safe batching in the VQC forward pass)
+- Improved QSVM preprocessing:
+  - train-fitted `PCA` to `num_qubits`
+  - train-fitted scaling to `[0, pi]`
+  - consistent val/test transforms
+- Faster QSVM kernel computation:
+  - QNode reuse
+  - symmetric kernel matrix optimization
+  - optional balanced test subset for evaluation
+- QML ablation support (`num_qubits`, `circuit_depth`) from YAML config
+- Tradeoff and ablation plots (when metadata is available)
 
----
+## Project Structure
 
-## 🧠 Models Used
+```text
+models/
+  classical/
+    cnn.py
+    mlp.py
+    lstm.py
+  hybrid_quantum/
+    hybrid_model.py
+    vqc.py
+  quantum_kernel/
+    qsvm.py
+training/
+  trainer_classical.py
+  trainer_hybrid.py
+  trainer_qsvm.py
+evaluation/
+  metrics.py
+  plots.py
+  logger.py
+config.yaml
+config_fast.yaml
+config_qsvm_minimal.yaml
+main.py
+```
 
-### Classical Models
-- Convolutional Neural Network (CNN)
-- Multi-Layer Perceptron (MLP)
-- Long Short-Term Memory (LSTM)
+## Installation
 
-### Quantum Models
-- Hybrid Quantum–Classical Model (VQC)
-- Quantum Support Vector Machine (QSVM)
-
----
-
-## 📊 Datasets Used
-- MNIST (Image dataset)
-- Fashion-MNIST (Image dataset)
-- IMDB (Text dataset - synthetic)
-
----
-
-## ⚙️ Technologies Used
-- Python 3.8+
-- PyTorch
-- PennyLane (Quantum ML)
-- Scikit-learn
-- NumPy, Pandas
-- Matplotlib, Seaborn
-
----
-
-## 🚀 How to Run
-
-### Step 1: Install Dependencies
 ```bash
 pip install -r requirements.txt
+```
+
+## Run
+
+```bash
+python main.py
+```
+
+## Config Files
+
+- `config.yaml`: default benchmark
+- `config_fast.yaml`: quick iteration (QSVM disabled)
+- `config_qsvm_minimal.yaml`: QSVM smoke-test mode (reduced complexity)
+
+## Key Config Options
+
+- `models_to_run`: enable/disable `cnn`, `mlp`, `lstm`, `hybrid_qc`, `qsvm`
+- `qsvm_max_size`: only run QSVM up to a dataset size threshold
+- `evaluation.qsvm_test_subset`: balanced test subset size for QSVM evaluation speed
+- `ablation.hybrid_quantum.*`: lists of qubits/depth values to sweep
+- `ablation.quantum_kernel.*`: lists of qubits/depth values to sweep
+
+## Outputs
+
+- `results/metrics/all_results.csv`: metrics + runtime/memory + (optional) ablation metadata
+- `results/plots/`: plots including:
+  - accuracy / F1 vs dataset size
+  - overfitting gap
+  - training time
+  - model comparison
+  - accuracy-time tradeoff
+  - QML ablation heatmaps (if ablation metadata exists)
+- `results/logs/`: run logs
+
+## Important Scientific Notes
+
+- Quantum models here run on classical simulators (PennyLane), not real quantum hardware.
+- Real hardware is not guaranteed to improve results; noise often makes performance worse.
+- This benchmark is designed to support honest conclusions about QML bottlenecks and tradeoffs.

@@ -1,0 +1,61 @@
+QUANTUM ML BENCHMARKING PROJECT - UPDATED SUMMARY
+=================================================
+
+PROJECT POSITIONING
+-------------------
+This project is a reproducible benchmarking and diagnostic framework for
+classical and quantum-integrated models in small-data regimes.
+
+Primary contribution:
+- Fair comparison + bottleneck analysis (not unsupported quantum-advantage claims)
+
+WHAT THE SYSTEM NOW EMPHASIZES
+------------------------------
+1. Accuracy + F1 + precision/recall
+2. Runtime and memory tradeoffs
+3. Hybrid-QC and QSVM bottlenecks
+4. QML ablations (qubits, circuit depth)
+5. Reproducible experiment configs
+
+MODELS INCLUDED
+---------------
+- CNN (image baseline)
+- MLP (fairer dense baseline for Hybrid-QC comparisons)
+- LSTM (text baseline)
+- Hybrid Quantum-Classical model (PennyLane VQC)
+- Quantum Kernel SVM (QSVM)
+
+RECENT IMPROVEMENTS
+-------------------
+1. Hybrid VQC forward pass fixed for gradient-safe batching
+2. QSVM preprocessing upgraded:
+   - PCA to num_qubits (fit on train only)
+   - consistent train/val/test scaling to [0, pi]
+3. QSVM kernel computation optimized:
+   - QNode reuse
+   - symmetric kernel matrix computation
+4. QSVM balanced test subset support for practical evaluation
+5. Ablation-ready config support for qubits/depth
+6. Added MLP baseline for fairer image comparisons
+7. Plot support for accuracy-time tradeoff and QML ablation heatmaps
+
+RESEARCH VALUE / NOVELTY (FOR PROJECT & PAPER)
+----------------------------------------------
+- Reproducible QML benchmarking pipeline with diagnostics
+- Fair preprocessing and comparison corrections
+- Empirical analysis of why QML underperforms in some regimes
+- Visualization-driven explanation of cost vs accuracy tradeoffs
+- Negative-result reporting with actionable design insights
+
+IMPORTANT LIMITATIONS
+---------------------
+- Quantum models run on simulators, not hardware
+- No claim of quantum advantage is made
+- Real quantum hardware may perform worse due to noise/latency
+- IMDB data in this repo is synthetic unless replaced with a real pipeline
+
+DEFENSIBLE PROJECT CLAIM
+------------------------
+"We developed a visual, reproducible benchmark to evaluate and diagnose
+quantum-integrated ML models, improved weak baseline implementations, and
+analyzed the conditions under which they fail to match classical baselines."
